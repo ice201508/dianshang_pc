@@ -20,7 +20,7 @@
           </el-input>
         </el-form-item>
         <el-form-item class="login-btn">
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
@@ -50,6 +50,13 @@ export default {
     };
   },
   methods: {
+    login() {
+      this.$refs.loginFormRef.validate((valid, obj) => {
+        if (valid) {
+          console.log(valid, obj);
+        }
+      });
+    },
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields();
       console.log(this.$refs.loginFormRef);
