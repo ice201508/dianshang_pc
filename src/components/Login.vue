@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
       },
       rules: {
         username: [
@@ -51,10 +51,14 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.loginFormRef.validate((valid, obj) => {
-        if (valid) {
-          console.log(valid, obj);
-        }
+      this.$refs.loginFormRef.validate((valid) => {
+        if (!valid) return '校验失败';
+
+        this.$http.post('/login', this.loginForm).then((res) => {
+          console.log(res);
+          if (res.data.meta === 200) return 'aa';
+          return res;
+        });
       });
     },
     resetLoginForm() {
