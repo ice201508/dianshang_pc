@@ -6,16 +6,16 @@
         <img src="../assets/logo.png" alt="登录" />
       </div>
       <!-- 显示表单区域 -->
-      <el-form class="login-form">
-        <el-form-item>
+      <el-form class="login-form" :model="loginForm" :rules="rules">
+        <el-form-item prop="username">
           <!-- <el-input prefix-icon="el-icon-user-solid"></el-input> -->
-          <el-input>
+          <el-input v-model="loginForm.username">
             <i slot="prefix" class="el-input__icon iconfont icon-user"></i>
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <!-- <el-input prefix-icon="el-icon-lock"></el-input> -->
-          <el-input>
+          <el-input v-model="loginForm.password">
             <i slot="prefix" class="el-input__icon iconfont iconzuopin"></i>
           </el-input>
         </el-form-item>
@@ -31,6 +31,24 @@
 <script>
 export default {
   name: 'Login',
+  data() {
+    return {
+      loginForm: {
+        username: '',
+        password: '',
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名称名称', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' },
+        ],
+      },
+    };
+  },
 };
 </script>
 
