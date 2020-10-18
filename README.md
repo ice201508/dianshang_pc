@@ -1,29 +1,8 @@
 # xinagmu_pc
 
-## Project setup
-```
-npm install
-```
+### 1. 项目的基本模板
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+1.1 项目后续安装 axios element-ui  less less-loader的第三方包
+1.2 配置element-ui的按需导入
+1.3 配置axios的抽离封装
+1.4 引入了.prettierrc 配置文件 进行项目格式化和eslint搭配使用
