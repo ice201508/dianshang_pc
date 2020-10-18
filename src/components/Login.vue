@@ -6,6 +6,18 @@
         <img src="../assets/logo.png" alt="登录" />
       </div>
       <!-- 显示表单区域 -->
+      <el-form class="login-form">
+        <el-form-item>
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item class="login-btn">
+          <el-button type="primary">登录</el-button>
+          <el-button type="info">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -53,6 +65,15 @@ export default {
       height: 100%;
       border-radius: 50%;
       background-color: #eee;
+    }
+  }
+  .login-form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 20px;
+    .login-btn {
+      text-align: right;
     }
   }
 }
