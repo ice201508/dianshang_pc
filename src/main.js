@@ -6,6 +6,7 @@ import App from './App.vue';
 import router from './router';
 
 import './assets/css/global.css';
+import './assets/fonts/iconfont.css';
 
 Vue.config.productionTip = false;
 // Vue.use(ElementUI);

@@ -8,10 +8,16 @@
       <!-- 显示表单区域 -->
       <el-form class="login-form">
         <el-form-item>
-          <el-input></el-input>
+          <!-- <el-input prefix-icon="el-icon-user-solid"></el-input> -->
+          <el-input>
+            <i slot="prefix" class="el-input__icon iconfont icon-user"></i>
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input></el-input>
+          <!-- <el-input prefix-icon="el-icon-lock"></el-input> -->
+          <el-input>
+            <i slot="prefix" class="el-input__icon iconfont iconzuopin"></i>
+          </el-input>
         </el-form-item>
         <el-form-item class="login-btn">
           <el-button type="primary">登录</el-button>
@@ -72,6 +78,7 @@ export default {
     bottom: 0;
     width: 100%;
     padding: 0 20px;
+    box-sizing: border-box;
     .login-btn {
       text-align: right;
     }
