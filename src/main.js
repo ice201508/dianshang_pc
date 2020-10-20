@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import axios from 'axios';
-// import ElementUI from 'element-ui';
-// import 'element-ui/lib/theme-chalk/index.css';
-// Vue.use(ElementUI);
-import './plugins/element';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+// import './plugins/element';
 import App from './App.vue';
 import router from './router';
 
@@ -12,7 +11,8 @@ import './assets/fonts/iconfont.css';
 
 axios.defaults.baseURL = 'http://m.leijiuling.com/api/private/v1/';
 Vue.prototype.$http = axios;
-Vue.prototype.aaa = 123;
+
+Vue.use(ElementUI);
 
 new Vue({
   router,
