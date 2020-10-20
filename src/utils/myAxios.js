@@ -7,7 +7,6 @@ const whiteList = ['/login', '/registry', '/code'];
 axios.interceptors.request.use(
   function(config) {
     // 在发送请求之前做些什么
-    console.log(config);
     // if (config.url !== '/login') {
     if (!whiteList.includes(config.url)) {
       config.headers.Authorization = window.sessionStorage.getItem('token');
