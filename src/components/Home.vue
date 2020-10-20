@@ -8,9 +8,13 @@
       <el-button type="info" @click="loginOut">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside :width="isCollapse ? '64px' : '200px'">
+        <div class="toggle-button" @click="toggleMenu">|||</div>
         <el-menu
           default-active="2"
+          unique-opened
+          :collapse="isCollapse"
+          :collapse-transition="false"
           class="el-menu-vertical-demo"
           background-color="#333744"
           text-color="#fff"
@@ -47,6 +51,7 @@ export default {
   data() {
     return {
       menuList: [],
+      isCollapse: false,
       iconList: {
         '125': 'iconfont icon-user',
         '103': 'iconfont icon-tijikongjian',
@@ -69,6 +74,9 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
 
       this.menuList = res.data;
+    },
+    toggleMenu() {
+      this.isCollapse = !this.isCollapse;
     },
   },
 };
@@ -101,5 +109,17 @@ export default {
 }
 .el-aside {
   background-color: #333744;
+  .toggle-button {
+    font-size: 10px;
+    color: #fff;
+    padding: 5px 0;
+    text-align: center;
+    background-color: #4a5064;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+  }
+  .el-menu {
+    border-right: none;
+  }
 }
 </style>
