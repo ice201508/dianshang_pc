@@ -14,11 +14,11 @@
           class="el-menu-vertical-demo"
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#409EFF"
         >
           <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i :class="iconList[item.id]"></i>
               <span>{{ item.authName }}</span>
             </template>
             <el-menu-item
@@ -26,7 +26,7 @@
               v-for="childItem in item.children"
               :key="childItem.id"
             >
-              <i class="el-icon-location"></i>
+              <i class="el-icon-menu"></i>
               <span>{{ childItem.authName }}</span>
             </el-menu-item>
             <!-- <el-submenu index="1-4">
@@ -47,6 +47,13 @@ export default {
   data() {
     return {
       menuList: [],
+      iconList: {
+        '125': 'iconfont icon-user',
+        '103': 'iconfont icon-tijikongjian',
+        '101': 'iconfont icon-shangpin',
+        '102': 'iconfont icon-danju',
+        '145': 'iconfont icon-baobiao',
+      },
     };
   },
   created() {
