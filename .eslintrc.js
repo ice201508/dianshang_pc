@@ -12,5 +12,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'object-curly-newline': 0,
     'consistent-return': 0,
+    'nonblock-statement-body-position': 0,
   },
 };

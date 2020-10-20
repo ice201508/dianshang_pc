@@ -12,8 +12,14 @@ import './assets/fonts/iconfont.css';
 
 axios.defaults.baseURL = 'http://m.leijiuling.com/api/private/v1/';
 Vue.prototype.$http = axios;
+Vue.prototype.aaa = 123;
 
 new Vue({
   router,
+  data() {
+    return {
+      abc: '我是根组件，通过$root访问',
+    };
+  },
   render: (h) => h(App),
 }).$mount('#app');

@@ -37,6 +37,7 @@ export default {
         username: 'admin',
         password: '123456',
       },
+      aaa: 444,
       rules: {
         username: [
           { required: true, message: '请输入用户名称名称', trigger: 'blur' },
@@ -51,14 +52,17 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.loginFormRef.validate((valid) => {
-        if (!valid) return '校验失败';
+      this.$refs.loginFormRef.validate(async (valid) => {
+        if (!valid) return this.$message.error('请输入符合格式要求的用户名和密码');
 
-        this.$http.post('/login', this.loginForm).then((res) => {
-          console.log(res);
-          if (res.data.meta === 200) return 'aa';
-          return res;
-        });
+        const { data: res } = await this.$http.post('/login', this.loginForm);
+        if (res.meta.status !== 200) {
+          return this.$message.error(res.meta.msg);
+        }
+        this.$message.success('登录成功');
+        window.sessionStorage.setItem('token', res.data.token);
+
+        this.$router.push('/home');
       });
     },
     resetLoginForm() {
