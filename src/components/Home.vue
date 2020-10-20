@@ -11,10 +11,11 @@
       <el-aside :width="isCollapse ? '64px' : '200px'">
         <div class="toggle-button" @click="toggleMenu">|||</div>
         <el-menu
-          default-active="2"
+          :default-active="activePath"
           unique-opened
           :collapse="isCollapse"
           :collapse-transition="false"
+          :router="true"
           class="el-menu-vertical-demo"
           background-color="#333744"
           text-color="#fff"
@@ -26,9 +27,10 @@
               <span>{{ item.authName }}</span>
             </template>
             <el-menu-item
-              :index="item.id + '-' + childItem.id"
+              :index="'/' + childItem.path"
               v-for="childItem in item.children"
               :key="childItem.id"
+              @click="getActivePath('/' + childItem.path)"
             >
               <i class="el-icon-menu"></i>
               <span>{{ childItem.authName }}</span>
@@ -54,6 +56,7 @@ export default {
     return {
       menuList: [],
       isCollapse: false,
+      activePath: '',
       iconList: {
         '125': 'iconfont icon-user',
         '103': 'iconfont icon-tijikongjian',
@@ -65,6 +68,7 @@ export default {
   },
   created() {
     this.getMenuList();
+    this.activePath = window.sessionStorage.getItem('activePath');
   },
   methods: {
     loginOut() {
@@ -79,6 +83,10 @@ export default {
     },
     toggleMenu() {
       this.isCollapse = !this.isCollapse;
+    },
+    getActivePath(param) {
+      this.activePath = param;
+      window.sessionStorage.setItem('activePath', param);
     },
   },
 };
