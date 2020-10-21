@@ -20,12 +20,17 @@
       </div>
       <!-- table数据区域 -->
       <template>
-        <el-table :data="userlist" style="width: 100%">
+        <el-table :data="userlist" style="width: 100%" stripe border>
+          <el-table-column type="index" :index="myselfIndex" label="#"> </el-table-column>
           <el-table-column prop="username" label="姓名"> </el-table-column>
           <el-table-column prop="email" label="邮箱"> </el-table-column>
           <el-table-column prop="mobile" label="电话"> </el-table-column>
           <el-table-column prop="role_name" label="角色"> </el-table-column>
-          <el-table-column prop="mg_state" label="状态"> </el-table-column>
+          <el-table-column prop="mg_state" label="状态">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.mg_state"> </el-switch>
+            </template>
+          </el-table-column>
           <el-table-column label="操作"> </el-table-column>
         </el-table>
       </template>
@@ -38,6 +43,7 @@ export default {
   name: 'Users',
   data() {
     return {
+      value: true,
       query: '',
       pagenum: 1,
       pagesize: 10,
@@ -49,6 +55,9 @@ export default {
     this.getUserList();
   },
   methods: {
+    myselfIndex(index) {
+      return index + 1;
+    },
     async getUserList() {
       const { data: res } = await this.$http.get('/users', {
         params: {
