@@ -18,6 +18,17 @@
           <el-col :span="4"> <el-button type="primary">添加用户</el-button></el-col>
         </el-row>
       </div>
+      <!-- table数据区域 -->
+      <template>
+        <el-table :data="userlist" style="width: 100%">
+          <el-table-column prop="username" label="姓名"> </el-table-column>
+          <el-table-column prop="email" label="邮箱"> </el-table-column>
+          <el-table-column prop="mobile" label="电话"> </el-table-column>
+          <el-table-column prop="role_name" label="角色"> </el-table-column>
+          <el-table-column prop="mg_state" label="状态"> </el-table-column>
+          <el-table-column label="操作"> </el-table-column>
+        </el-table>
+      </template>
     </el-card>
   </div>
 </template>
@@ -25,6 +36,33 @@
 <script>
 export default {
   name: 'Users',
+  data() {
+    return {
+      query: '',
+      pagenum: 1,
+      pagesize: 10,
+      total: 0,
+      userlist: [],
+    };
+  },
+  created() {
+    this.getUserList();
+  },
+  methods: {
+    async getUserList() {
+      const { data: res } = await this.$http.get('/users', {
+        params: {
+          query: this.query,
+          pagenum: this.pagenum,
+          pagesize: this.pagesize,
+        },
+      });
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+
+      this.userlist = res.data.users;
+      this.total = res.data.total;
+    },
+  },
 };
 </script>
 
