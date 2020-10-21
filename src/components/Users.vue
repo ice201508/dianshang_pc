@@ -56,7 +56,7 @@
       >
       </el-pagination>
     </el-card>
-    <el-dialog title="提示" :visible.sync="addUserDialog" width="50%">
+    <el-dialog title="提示" :visible.sync="addUserDialog" width="50%" @close="resetForm">
       <el-form :model="addForm" :rules="addFormRules" ref="addForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
@@ -73,7 +73,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addUserDialog = false">确 定</el-button>
+        <el-button type="primary" @click="addUserSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -87,17 +87,17 @@ export default {
       const emailPattern = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
 
       if (emailPattern.test(value)) {
-        callback();
+        return callback();
       }
       callback(new Error('邮箱格式错误，请重新输入'));
     };
     const mobileValidate = (rule, value, callback) => {
-      const mobilePattern = /^1[3456789]d{9}$/;
+      const mobilePattern = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
 
       if (mobilePattern.test(value)) {
-        callback();
+        return callback();
       }
-      callback(new Error('邮箱格式错误，请重新输入'));
+      callback(new Error('手机格式错误，请重新输入'));
     };
     return {
       query: '',
@@ -171,6 +171,20 @@ export default {
     },
     addUser() {
       this.addUserDialog = true;
+    },
+    resetForm() {
+      // this.$refs['addForm'].resetFields();
+    },
+    addUserSubmit() {
+      // this.addUserDialog = true
+      this.$refs['addForm'].validate(async (valide) => {
+        if (!valide) return this.$message.error('校验失败，请重新输入');
+        const { data: res } = await this.$http.post('/users', this.addForm);
+        console.log(res);
+        if (!res.meta || res.meta.status !== 201) return this.$message.error('添加用户失败');
+        this.addUserDialog = false;
+        this.getUserList();
+      });
     },
   },
 };
