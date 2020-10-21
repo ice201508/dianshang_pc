@@ -19,29 +19,40 @@
         </el-row>
       </div>
       <!-- table数据区域 -->
-      <template>
-        <el-table :data="userlist" style="width: 100%" stripe border>
-          <el-table-column type="index" :index="myselfIndex" label="#"> </el-table-column>
-          <el-table-column prop="username" label="姓名"> </el-table-column>
-          <el-table-column prop="email" label="邮箱"> </el-table-column>
-          <el-table-column prop="mobile" label="电话"> </el-table-column>
-          <el-table-column prop="role_name" label="角色"> </el-table-column>
-          <el-table-column prop="mg_state" label="状态">
-            <template slot-scope="scope">
-              <el-switch v-model="scope.row.mg_state"> </el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
-              <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
-              <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
-                <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-        </el-table>
-      </template>
+
+      <el-table :data="userlist" style="width: 100%" stripe border>
+        <el-table-column type="index" :index="myselfIndex" label="#"> </el-table-column>
+        <el-table-column prop="username" label="姓名"> </el-table-column>
+        <el-table-column prop="email" label="邮箱"> </el-table-column>
+        <el-table-column prop="mobile" label="电话"> </el-table-column>
+        <el-table-column prop="role_name" label="角色"> </el-table-column>
+        <el-table-column prop="mg_state" label="状态">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.mg_state"> </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope>
+            <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+            <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
+              <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页插件 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagenum"
+        :page-sizes="[5, 10, 30, 50]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -51,7 +62,6 @@ export default {
   name: 'Users',
   data() {
     return {
-      value: true,
       query: '',
       pagenum: 1,
       pagesize: 10,
@@ -79,6 +89,14 @@ export default {
       this.userlist = res.data.users;
       this.total = res.data.total;
     },
+    handleSizeChange(val) {
+      this.pagesize = val;
+      this.getUserList();
+    },
+    handleCurrentChange(val) {
+      this.pagenum = val;
+      this.getUserList();
+    },
   },
 };
 </script>
@@ -90,5 +108,8 @@ export default {
 }
 .input-box {
   margin-bottom: 15px;
+}
+.el-pagination {
+  margin: 15px 0;
 }
 </style>
