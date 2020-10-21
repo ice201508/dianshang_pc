@@ -99,10 +99,18 @@ export default {
     },
     async toogleStatus(val) {
       console.log(val);
-      const { data: res } = await this.$http.put(`/users/${val.id}/state/${val.mg_state}`);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      try {
+        const { data: res } = await this.$http.put(`/users/${val.id}/state/${val.mg_state}`);
+        if (!res.meta || res.meta.status !== 200) {
+          val.mg_state = !val.mg_state;
+          return this.$message.error('状态更新失败');
+        }
 
-      return this.$message.success(res.meta.msg);
+        this.$message.success(res.meta.msg);
+      } catch (err) {
+        val.mg_state = !val.mg_state;
+        this.$message.error('操作失败，请重试');
+      }
     },
   },
 };
