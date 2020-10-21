@@ -11,8 +11,8 @@
       <div class="input-box">
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-input placeholder="请输入内容">
-              <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input placeholder="请输入内容" v-model="query" clearable @clear="getUserList">
+              <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
             </el-input>
           </el-col>
           <el-col :span="4"> <el-button type="primary">添加用户</el-button></el-col>
@@ -98,7 +98,7 @@ export default {
       this.getUserList();
     },
     async toogleStatus(val) {
-      console.log(val);
+      // console.log(val);
       try {
         const { data: res } = await this.$http.put(`/users/${val.id}/state/${val.mg_state}`);
         if (!res.meta || res.meta.status !== 200) {
