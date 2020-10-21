@@ -31,7 +31,15 @@
               <el-switch v-model="scope.row.mg_state"> </el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="操作"> </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+              <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+              <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
+                <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
         </el-table>
       </template>
     </el-card>
@@ -79,5 +87,8 @@ export default {
 .el-card {
   margin: 15px 0;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.input-box {
+  margin-bottom: 15px;
 }
 </style>

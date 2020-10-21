@@ -132,4 +132,9 @@ export default {
     border-right: none;
   }
 }
+.el-main {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 </style>

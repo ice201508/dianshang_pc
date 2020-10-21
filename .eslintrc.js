@@ -45,6 +45,7 @@ module.exports = {
     'prefer-promise-reject-errors': 0,
     eqeqeq: 0,
     camelcase: 0,
+    'vue/no-unused-vars': 0,
     'object-shorthand': 0,
   },
 };
