@@ -15,7 +15,9 @@
               <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
             </el-input>
           </el-col>
-          <el-col :span="4"> <el-button type="primary">添加用户</el-button></el-col>
+          <el-col :span="4">
+            <el-button type="primary" @click="addUser">添加用户</el-button></el-col
+          >
         </el-row>
       </div>
       <!-- table数据区域 -->
@@ -54,6 +56,26 @@
       >
       </el-pagination>
     </el-card>
+    <el-dialog title="提示" :visible.sync="addUserDialog" width="50%">
+      <el-form :model="addForm" :rules="addFormRules" ref="addForm" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addUserDialog = false">取 消</el-button>
+        <el-button type="primary" @click="addUserDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -67,6 +89,19 @@ export default {
       pagesize: 10,
       total: 0,
       userlist: [],
+      addUserDialog: false,
+      addForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: '',
+      },
+      addFormRules: {
+        username: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
+        ],
+      },
     };
   },
   created() {
@@ -111,6 +146,9 @@ export default {
         val.mg_state = !val.mg_state;
         this.$message.error('操作失败，请重试');
       }
+    },
+    addUser() {
+      this.addUserDialog = true;
     },
   },
 };
