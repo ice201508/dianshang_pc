@@ -83,6 +83,22 @@
 export default {
   name: 'Users',
   data() {
+    const emailValidate = (rule, value, callback) => {
+      const emailPattern = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+
+      if (emailPattern.test(value)) {
+        callback();
+      }
+      callback(new Error('邮箱格式错误，请重新输入'));
+    };
+    const mobileValidate = (rule, value, callback) => {
+      const mobilePattern = /^1[3456789]d{9}$/;
+
+      if (mobilePattern.test(value)) {
+        callback();
+      }
+      callback(new Error('邮箱格式错误，请重新输入'));
+    };
     return {
       query: '',
       pagenum: 1,
@@ -101,6 +117,12 @@ export default {
           { required: true, message: '请输入用户名称', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
         ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' },
+        ],
+        email: [{ validator: emailValidate, trigger: 'blur' }],
+        mobile: [{ validator: mobileValidate, trigger: 'blur' }],
       },
     };
   },

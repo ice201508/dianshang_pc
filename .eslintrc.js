@@ -47,5 +47,6 @@ module.exports = {
     camelcase: 0,
     'vue/no-unused-vars': 0,
     'object-shorthand': 0,
+    'no-useless-escape': 0,
   },
 };
