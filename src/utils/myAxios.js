@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'http://m.leijiuling.com/api/private/v1/';
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
+axios.defaults.baseURL = 'http://m.leijiuling.com/api/private/v1/';
+// axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
 // 路由白名单
 const whiteList = ['/login', '/registry', '/code'];
 // 添加请求拦截器

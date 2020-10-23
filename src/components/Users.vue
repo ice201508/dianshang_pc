@@ -35,7 +35,13 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope>
-            <el-button type="primary" size="mini" icon="el-icon-edit" circle></el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-edit"
+              circle
+              @click="editUserDialog = true"
+            ></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
               <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
@@ -56,13 +62,32 @@
       >
       </el-pagination>
     </el-card>
-    <el-dialog title="提示" :visible.sync="addUserDialog" width="50%" @close="resetForm">
+    <!-- 这个是新增用户的弹出框 -->
+    <el-dialog title="新增" :visible.sync="addUserDialog" width="50%" @close="resetForm">
       <el-form :model="addForm" :rules="addFormRules" ref="addForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addUserDialog = false">取 消</el-button>
+        <el-button type="primary" @click="addUserSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 这个是编辑用户的弹出框 -->
+    <el-dialog title="编辑" :visible.sync="editUserDialog" width="50%" @close="resetForm">
+      <el-form :model="addForm" :rules="addFormRules" ref="addForm" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="addForm.email"></el-input>
@@ -106,6 +131,7 @@ export default {
       total: 0,
       userlist: [],
       addUserDialog: false,
+      editUserDialog: false,
       addForm: {
         username: '',
         password: '',
