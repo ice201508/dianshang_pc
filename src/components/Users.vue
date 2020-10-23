@@ -34,13 +34,13 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template slot-scope>
+          <template slot-scope="scope">
             <el-button
               type="primary"
               size="mini"
               icon="el-icon-edit"
               circle
-              @click="editUserDialog = true"
+              @click="showEditDialog(scope.row.id)"
             ></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
@@ -85,20 +85,20 @@
     </el-dialog>
     <!-- 这个是编辑用户的弹出框 -->
     <el-dialog title="编辑" :visible.sync="editUserDialog" width="50%" @close="resetForm">
-      <el-form :model="addForm" :rules="addFormRules" ref="addForm" label-width="100px">
+      <el-form :model="editForm" :rules="addFormRules" ref="editForm" label-width="100px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="addForm.username"></el-input>
+          <el-input v-model="editForm.username" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="addForm.email"></el-input>
+          <el-input v-model="editForm.email"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="addForm.mobile"></el-input>
+          <el-input v-model="editForm.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addUserDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addUserSubmit">确 定</el-button>
+        <el-button @click="editUserDialog = false">取 消</el-button>
+        <el-button type="primary" @click="editUserSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -132,6 +132,7 @@ export default {
       userlist: [],
       addUserDialog: false,
       editUserDialog: false,
+      editForm: {},
       addForm: {
         username: '',
         password: '',
@@ -199,7 +200,7 @@ export default {
       this.addUserDialog = true;
     },
     resetForm() {
-      // this.$refs['addForm'].resetFields();
+      this.$refs['addForm'].resetFields();
     },
     addUserSubmit() {
       // this.addUserDialog = true
@@ -212,6 +213,14 @@ export default {
         this.getUserList();
       });
     },
+    async showEditDialog(id) {
+      const { data: res } = await this.$http.get('users/' + id);
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+
+      this.editForm = res.data;
+      this.editUserDialog = true;
+    },
+    editUserSubmit() {},
   },
 };
 </script>
