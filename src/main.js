@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import ZkTable from 'vue-table-with-tree-grid';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 // import './plugins/element';
@@ -12,6 +13,7 @@ import './assets/fonts/iconfont.css';
 Vue.prototype.$http = axios;
 
 Vue.use(ElementUI);
+Vue.component('tree-table', ZkTable);
 
 new Vue({
   router,
