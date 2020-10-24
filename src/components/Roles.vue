@@ -60,14 +60,38 @@
         <el-table-column label="角色描述" prop="roleDesc"> </el-table-column>
         <el-table-column label="操作" width="300">
           <!-- 下面要写其他的组件，必须写插槽，而且是作用域插槽，需要去官网复制或者从其他页面复制过来 -->
-          <template slot-scope>
+          <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting">分配角色</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              icon="el-icon-setting"
+              @click="fenpeiRoles(scope.row)"
+              >分配角色</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 分配角色的弹出框 -->
+    <el-dialog title="分配权限" :visible.sync="dialogRoles" width="50%" @close="dialogClose">
+      <el-tree
+        ref="treeRef"
+        :data="rightsList"
+        :props="defaultProps"
+        @node-click="handleNodeClick()"
+        :default-checked-keys="defaultKeys"
+        default-expand-all
+        show-checkbox
+        node-key="id"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogRoles = false">取 消</el-button>
+        <el-button type="primary" @click="fenpeiSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,10 +101,19 @@ export default {
   data() {
     return {
       rolesList: [],
+      rightsList: [],
+      defaultKeys: [],
+      dialogRoles: false,
+      roleId: null,
+      defaultProps: {
+        children: 'children',
+        label: 'authName',
+      },
     };
   },
   created() {
     this.getRolesList();
+    // this.getRightsList();
   },
   methods: {
     async getRolesList() {
@@ -88,7 +121,12 @@ export default {
 
       if (res.meta.status !== 200) return this.$message.error('获取角色列表失败');
       this.rolesList = res.data;
-      console.log(this.rolesList);
+    },
+    async getRightsList() {
+      const { data: res } = await this.$http.get('/rights/tree');
+
+      if (res.meta.status !== 200) return this.$message.error('获取权限列表失败');
+      this.rightsList = res.data;
     },
     deleteTags(scope, id) {
       this.$confirm('是否删除当前权限?', '提示', {
@@ -115,6 +153,39 @@ export default {
             message: '已取消删除',
           });
         });
+    },
+    async fenpeiRoles(scope) {
+      this.roleId = scope.id;
+      const { data: res } = await this.$http.get('rights/tree');
+      if (res.meta.status !== 200) return this.$message.error('获取权限列表失败');
+      this.rightsList = res.data;
+
+      this.diguiShuju(scope, this.defaultKeys);
+      this.dialogRoles = true;
+    },
+    diguiShuju(node, arr) {
+      if (!node.children) {
+        return arr.push(node.id);
+      }
+
+      node.children.forEach((item) => {
+        this.diguiShuju(item, arr);
+      });
+    },
+    dialogClose() {
+      console.log(11);
+      this.defaultKeys = [];
+    },
+    handleNodeClick(data) {
+      // console.log(data);
+    },
+    async fenpeiSubmit() {
+      // const {data: res} = await this.$http.post(`/roles/${this.roleId}/rights`, {
+      //   rids: []
+      // })
+      console.log(this.$refs.treeRef.getCheckedKeys());
+      console.log(this.$refs.treeRef.getHalfCheckedKeys());
+      // this.dialogRoles = false;
     },
   },
 };
