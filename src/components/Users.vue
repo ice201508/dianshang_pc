@@ -97,7 +97,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editUserDialog = false">取 消</el-button>
+        <el-button @click="editUserReset">取 消</el-button>
         <el-button type="primary" @click="editUserSubmit">确 定</el-button>
       </span>
     </el-dialog>
@@ -207,7 +207,6 @@ export default {
       this.$refs['addForm'].validate(async (valide) => {
         if (!valide) return this.$message.error('校验失败，请重新输入');
         const { data: res } = await this.$http.post('/users', this.addForm);
-        console.log(res);
         if (!res.meta || res.meta.status !== 201) return this.$message.error('添加用户失败');
         this.addUserDialog = false;
         this.getUserList();
@@ -220,7 +219,24 @@ export default {
       this.editForm = res.data;
       this.editUserDialog = true;
     },
-    editUserSubmit() {},
+    editUserReset() {
+      this.$refs['editForm'].resetFields();
+      this.editUserDialog = false;
+    },
+    editUserSubmit() {
+      this.$refs.editForm.validate(async (validator) => {
+        if (!validator) return this.$message.error('表单数据格式有误，请修改数据');
+
+        const { data: res } = await this.$http.put('/users/' + this.editForm.id, {
+          id: this.editForm.id,
+          email: this.editForm.email,
+          mobile: this.editForm.mobile,
+        });
+        if (!validator) return this.$message.error(res.meta.msg);
+        this.editUserDialog = false;
+        this.getUserList();
+      });
+    },
   },
 };
 </script>
