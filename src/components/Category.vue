@@ -147,7 +147,7 @@ export default {
       addCategoryModel: {
         cat_name: '',
         cat_pid: 0, // 分类的父id， 如果要添加一级分类，父分类id应该设置为零
-        cate_level: 0, //分类层级 0 一级分类  1表示二级分类  2表示三级分类
+        cat_level: 0, //分类层级 0 一级分类  1表示二级分类  2表示三级分类
       },
       rules: {
         cat_name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
@@ -206,22 +206,30 @@ export default {
     parentCateHandleChange(val) {
       if (val.length >= 0) {
         this.addCategoryModel.cat_pid = val[val.length - 1];
-        this.addCategoryModel.cate_level = val.length;
+        this.addCategoryModel.cat_level = val.length;
       } else {
         this.addCategoryModel.cat_pid = 0;
-        this.addCategoryModel.cate_level = 0;
+        this.addCategoryModel.cat_level = 0;
       }
     },
     addCateBtn() {
-      console.log(this.parentCate);
-      console.log(this.addCategoryModel);
-      this.addCategorydialogVisible = false;
+      this.$refs.ruleForm.validate(async (isok) => {
+        if (isok) {
+          const { data: res } = await this.$http.post('categories', this.addCategoryModel);
+          if (res.meta.status !== 201) return this.$message.error(res.meta.msg);
+
+          this.getCategoryList();
+          this.addCategorydialogVisible = false;
+        } else {
+          this.$message.error('请输入正确格式');
+        }
+      });
     },
     closeCateDialog() {
       this.parentCate = [];
       this.$refs.ruleForm.resetFields();
       this.addCategoryModel.cat_pid = 0;
-      this.addCategoryModel.cate_level = 0;
+      this.addCategoryModel.cat_level = 0;
     },
   },
 };
