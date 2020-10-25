@@ -130,6 +130,31 @@
         <el-button type="primary" @click="addDynParmas">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 渲染编辑 添加属性和动态参数的对话框，共用一个 -->
+    <el-dialog
+      :title="'编辑' + dynTitle"
+      :visible.sync="editParamDialogVisible"
+      width="50%"
+      @close="editParamDialogClose"
+    >
+      <el-form
+        :model="editRuleForm"
+        :rules="rules"
+        ref="editRuleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item :label="dynTitle" prop="attr_name">
+          <el-input v-model="editRuleForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editParamDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editDynParmas">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -144,7 +169,11 @@ export default {
       manyParamsData: [],
       onlyParamsData: [],
       addParamDialogVisible: false,
+      editParamDialogVisible: false,
       ruleForm: {
+        attr_name: '',
+      },
+      editRuleForm: {
         attr_name: '',
       },
       rules: {
@@ -202,12 +231,41 @@ export default {
         this.addParamDialogVisible = false;
       });
     },
+    editDynParmas() {
+      this.$refs.editRuleForm.validate(async (isok) => {
+        if (!isok) return this.$message.error('输入数据有误，请重新输入');
+
+        let id = this.parentCate[this.parentCate.length - 1];
+        const { data: res } = await this.$http.put(
+          `categories/${id}/attributes/${this.editRuleForm.attr_id}`,
+          {
+            attr_name: this.editRuleForm.attr_name,
+            attr_sel: this.activeName,
+          }
+        );
+        if (res.meta.status !== 200) return this.$message.error('输入数据有误，请重新输入');
+
+        this.getParamsList();
+        this.editParamDialogVisible = false;
+      });
+    },
+
     paramDialogClose() {
       this.$refs.ruleForm.resetFields();
     },
-    manyHandleEdit() {},
+    editParamDialogClose() {
+      this.$refs.editRuleForm.resetFields();
+    },
+    manyHandleEdit(val) {
+      this.editRuleForm = val;
+      console.log(this.editRuleForm);
+      this.editParamDialogVisible = true;
+    },
     manyHandleDelete() {},
-    onlyHandleEdit() {},
+    onlyHandleEdit(val) {
+      this.editRuleForm = val;
+      this.editParamDialogVisible = true;
+    },
     onlyHandleDelete() {},
   },
   computed: {
