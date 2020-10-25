@@ -35,9 +35,17 @@
           </el-row>
           <el-table :data="manyParamsData" border stripe style="width: 100%">
             <el-table-column type="expand" width="50">
-              <template>
-                <div>
-                  123
+              <template slot-scope="scope">
+                <div v-if="scope.row.attr_vals.length > 0">
+                  <el-tag
+                    :key="tag"
+                    v-for="tag in scope.row.attr_vals.split(' ')"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleClose(tag)"
+                  >
+                    {{ tag }}
+                  </el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -297,6 +305,9 @@ export default {
       this.editRuleForm = val;
       this.editParamDialogVisible = true;
     },
+    handleClose(val) {
+      console.log(val);
+    },
   },
   computed: {
     parentCateBtn() {
@@ -315,5 +326,8 @@ export default {
 }
 .el-row {
   margin: 0 0 15px 0;
+}
+.el-tag {
+  margin: 0 10px;
 }
 </style>
