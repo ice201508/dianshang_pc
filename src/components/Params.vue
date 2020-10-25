@@ -96,7 +96,7 @@
                   size="mini"
                   type="danger"
                   icon="el-icon-delete"
-                  @click="onlyHandleDelete(scope.row)"
+                  @click="manyHandleDelete(scope.row)"
                   >删除</el-button
                 >
               </template>
@@ -261,12 +261,42 @@ export default {
       console.log(this.editRuleForm);
       this.editParamDialogVisible = true;
     },
-    manyHandleDelete() {},
+    manyHandleDelete(val) {
+      let id = this.parentCate[this.parentCate.length - 1];
+      this.$confirm('是否确定删除当前参数?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async () => {
+          const { data: res } = await this.$http.delete(
+            `categories/${id}/attributes/${val.attr_id}`
+          );
+
+          if (res.meta.status != 200) {
+            return this.$message({
+              type: 'error',
+              message: '删除失败',
+            });
+          }
+
+          this.getParamsList();
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除',
+          });
+        });
+    },
     onlyHandleEdit(val) {
       this.editRuleForm = val;
       this.editParamDialogVisible = true;
     },
-    onlyHandleDelete() {},
   },
   computed: {
     parentCateBtn() {
