@@ -50,5 +50,6 @@ module.exports = {
     'no-useless-escape': 0,
     'spaced-comment': 0,
     'prefer-destructuring': 0,
+    'no-unneeded-ternary': 0,
   },
 };

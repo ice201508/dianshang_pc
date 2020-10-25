@@ -21,6 +21,19 @@
         >
         </el-cascader>
       </div>
+      <!-- 标签页的选择 -->
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="动态参数" name="first">
+          <el-row>
+            <el-button type="primary" size="mini" :disabled="parentCateBtn">添加参数</el-button>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="静态属性" name="second">
+          <el-row>
+            <el-button type="primary" size="mini" :disabled="parentCateBtn">添加属性</el-button>
+          </el-row>
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
   </div>
 </template>
@@ -32,6 +45,7 @@ export default {
     return {
       parentCate: [],
       parentCateOptions: [],
+      activeName: 'first',
     };
   },
   created() {
@@ -44,7 +58,14 @@ export default {
       this.parentCateOptions = res.data;
     },
     parentCateHandleChange(val) {
-      console.log(val);
+      if (val.length !== 3) {
+        this.parentCate = [];
+      }
+    },
+  },
+  computed: {
+    parentCateBtn() {
+      return this.parentCate.length !== 3 ? true : false;
     },
   },
 };
