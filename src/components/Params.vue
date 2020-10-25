@@ -22,13 +22,13 @@
         </el-cascader>
       </div>
       <!-- 标签页的选择 -->
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="动态参数" name="first">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="动态参数" name="many">
           <el-row>
             <el-button type="primary" size="mini" :disabled="parentCateBtn">添加参数</el-button>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="静态属性" name="second">
+        <el-tab-pane label="静态属性" name="only">
           <el-row>
             <el-button type="primary" size="mini" :disabled="parentCateBtn">添加属性</el-button>
           </el-row>
@@ -45,7 +45,7 @@ export default {
     return {
       parentCate: [],
       parentCateOptions: [],
-      activeName: 'first',
+      activeName: 'many',
     };
   },
   created() {
@@ -57,10 +57,25 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
       this.parentCateOptions = res.data;
     },
+    async getParamsList() {
+      const { data: res } = await this.$http.get(
+        `categories/${this.parentCate[this.parentCate.length - 1]}/attributes`,
+        {
+          params: { sel: this.activeName },
+        }
+      );
+      console.log(res);
+    },
     parentCateHandleChange(val) {
       if (val.length !== 3) {
         this.parentCate = [];
+        return null;
       }
+
+      this.getParamsList();
+    },
+    handleClick() {
+      this.getParamsList();
     },
   },
   computed: {
