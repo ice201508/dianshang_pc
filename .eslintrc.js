@@ -48,5 +48,6 @@ module.exports = {
     'vue/no-unused-vars': 0,
     'object-shorthand': 0,
     'no-useless-escape': 0,
+    'spaced-comment': 0,
   },
 };

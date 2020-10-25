@@ -21,7 +21,7 @@
             <el-row
               class="row-1 vertical-moddle"
               :class="['colr-red']"
-              v-for="(item_1, index_1) in scope.row.children"
+              v-for="item_1 in scope.row.children"
               :key="item_1.id"
             >
               <el-col :span="5">
@@ -32,7 +32,7 @@
                 <!-- 注意栅格系统的嵌套，这是19列的col，我们把这个19列又当做一行，写一个el-row，里面再写两个列el-col -->
                 <el-row
                   class="row-2 vertical-moddle"
-                  v-for="(item_2, index_2) in item_1.children"
+                  v-for="item_2 in item_1.children"
                   :key="item_2.id"
                 >
                   <el-col :span="8">
