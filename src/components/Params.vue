@@ -36,16 +36,30 @@
           <el-table :data="manyParamsData" border stripe style="width: 100%">
             <el-table-column type="expand" width="50">
               <template slot-scope="scope">
-                <div v-if="scope.row.attr_vals.length > 0">
-                  <el-tag
-                    :key="tag"
-                    v-for="tag in scope.row.attr_vals.split(' ')"
-                    closable
-                    :disable-transitions="false"
-                    @close="handleClose(tag)"
+                <div>
+                  <div v-if="scope.row.attr_vals.length > 0">
+                    <el-tag
+                      :key="tag"
+                      v-for="tag in scope.row.attr_vals.split(' ')"
+                      closable
+                      :disable-transitions="false"
+                      @close="handleClose(tag)"
+                    >
+                      {{ tag }}
+                    </el-tag>
+                  </div>
+                  <el-input
+                    class="input-new-tag"
+                    v-if="inputVisible"
+                    v-model="inputValue"
+                    ref="saveTagInput"
+                    size="small"
+                    @keyup.enter.native="handleInputConfirm(scope.row)"
+                    @blur="handleInputConfirm(scope.row)"
+                  />
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput"
+                    >+ New Tag</el-button
                   >
-                    {{ tag }}
-                  </el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -187,6 +201,8 @@ export default {
       rules: {
         attr_name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
       },
+      inputVisible: false,
+      inputValue: '',
     };
   },
   created() {
@@ -307,6 +323,20 @@ export default {
     },
     handleClose(val) {
       console.log(val);
+    },
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    handleInputConfirm(val) {
+      // let inputValue = this.inputValue;
+      // if (inputValue) {
+      //   this.val.attr.push(val.attr);
+      // }
+      this.inputVisible = false;
+      this.inputValue = '';
     },
   },
   computed: {
