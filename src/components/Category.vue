@@ -67,7 +67,12 @@
       </el-pagination>
 
       <!-- 下面是一个添加分类的弹出框， 复制过来 -->
-      <el-dialog title="添加分类" :visible.sync="addCategorydialogVisible" width="50%">
+      <el-dialog
+        title="添加分类"
+        :visible.sync="addCategorydialogVisible"
+        width="50%"
+        @close="closeCateDialog"
+      >
         <el-form
           :model="addCategoryModel"
           :rules="rules"
@@ -76,7 +81,7 @@
           class="demo-ruleForm"
         >
           <el-form-item label="分类名称" prop="cat_name">
-            <el-input v-model="addCategoryModel.cat_name"></el-input>
+            <el-input v-model.trim="addCategoryModel.cat_name"></el-input>
           </el-form-item>
           <el-form-item label="父级分类">
             <!-- :props="{ label: 'cat_name', value: 'cat_id', expandTrigger: 'click' }" -->
@@ -84,6 +89,7 @@
               v-model="parentCate"
               :options="parentCateOptions"
               @change="parentCateHandleChange"
+              :props="{ checkStrictly: true }"
               clearable
             >
             </el-cascader>
@@ -91,7 +97,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addCategorydialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addCategorydialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="addCateBtn">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -140,6 +146,8 @@ export default {
       ],
       addCategoryModel: {
         cat_name: '',
+        cat_pid: 0, // 分类的父id， 如果要添加一级分类，父分类id应该设置为零
+        cate_level: 0, //分类层级 0 一级分类  1表示二级分类  2表示三级分类
       },
       rules: {
         cat_name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
@@ -196,7 +204,24 @@ export default {
       });
     },
     parentCateHandleChange(val) {
-      console.log(val);
+      if (val.length >= 0) {
+        this.addCategoryModel.cat_pid = val[val.length - 1];
+        this.addCategoryModel.cate_level = val.length;
+      } else {
+        this.addCategoryModel.cat_pid = 0;
+        this.addCategoryModel.cate_level = 0;
+      }
+    },
+    addCateBtn() {
+      console.log(this.parentCate);
+      console.log(this.addCategoryModel);
+      this.addCategorydialogVisible = false;
+    },
+    closeCateDialog() {
+      this.parentCate = [];
+      this.$refs.ruleForm.resetFields();
+      this.addCategoryModel.cat_pid = 0;
+      this.addCategoryModel.cate_level = 0;
     },
   },
 };
@@ -205,5 +230,8 @@ export default {
 <style lang="less" scoped>
 .zk-table {
   margin: 15px 0;
+}
+.el-cascader {
+  width: 100%;
 }
 </style>

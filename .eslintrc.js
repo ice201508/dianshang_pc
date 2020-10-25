@@ -49,5 +49,6 @@ module.exports = {
     'object-shorthand': 0,
     'no-useless-escape': 0,
     'spaced-comment': 0,
+    'prefer-destructuring': 0,
   },
 };
