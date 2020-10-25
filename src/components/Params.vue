@@ -25,7 +25,13 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="动态参数" name="many">
           <el-row>
-            <el-button type="primary" size="mini" :disabled="parentCateBtn">添加参数</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              :disabled="parentCateBtn"
+              @click="addParamDialogVisible = true"
+              >添加参数</el-button
+            >
           </el-row>
           <el-table :data="manyParamsData" border stripe style="width: 100%">
             <el-table-column type="expand" width="50">
@@ -59,7 +65,13 @@
         </el-tab-pane>
         <el-tab-pane label="静态属性" name="only">
           <el-row>
-            <el-button type="primary" size="mini" :disabled="parentCateBtn">添加属性</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              :disabled="parentCateBtn"
+              @click="addParamDialogVisible = true"
+              >添加属性</el-button
+            >
           </el-row>
           <el-table :data="onlyParamsData" border stripe style="width: 100%">
             <el-table-column type="expand" width="50">
@@ -93,6 +105,31 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+
+    <!-- 渲染添加属性和动态参数的对话框，共用一个 -->
+    <el-dialog
+      :title="'添加' + dynTitle"
+      :visible.sync="addParamDialogVisible"
+      width="50%"
+      @close="paramDialogClose"
+    >
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item :label="dynTitle" prop="attr_name">
+          <el-input v-model="ruleForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addParamDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDynParmas">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -106,6 +143,13 @@ export default {
       activeName: 'many',
       manyParamsData: [],
       onlyParamsData: [],
+      addParamDialogVisible: false,
+      ruleForm: {
+        attr_name: '',
+      },
+      rules: {
+        attr_name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+      },
     };
   },
   created() {
@@ -143,6 +187,24 @@ export default {
     handleClick() {
       this.getParamsList();
     },
+    addDynParmas() {
+      this.$refs.ruleForm.validate(async (isok) => {
+        if (!isok) return this.$message.error('输入数据有误，请重新输入');
+
+        let id = this.parentCate[this.parentCate.length - 1];
+        const { data: res } = await this.$http.post(`categories/${id}/attributes`, {
+          attr_name: this.ruleForm.attr_name,
+          attr_sel: this.activeName,
+        });
+        if (res.meta.status !== 201) return this.$message.error('输入数据有误，请重新输入');
+
+        this.getParamsList();
+        this.addParamDialogVisible = false;
+      });
+    },
+    paramDialogClose() {
+      this.$refs.ruleForm.resetFields();
+    },
     manyHandleEdit() {},
     manyHandleDelete() {},
     onlyHandleEdit() {},
@@ -152,6 +214,9 @@ export default {
     parentCateBtn() {
       return this.parentCate.length !== 3 ? true : false;
     },
+    dynTitle() {
+      return this.activeName === 'many' ? '动态参数' : '静态属性';
+    },
   },
 };
 </script>
@@ -159,5 +224,8 @@ export default {
 <style lang="less" scoped>
 .el-cascader {
   width: 30%;
+}
+.el-row {
+  margin: 0 0 15px 0;
 }
 </style>
