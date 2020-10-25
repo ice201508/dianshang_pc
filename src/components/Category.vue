@@ -78,7 +78,16 @@
           <el-form-item label="分类名称" prop="cat_name">
             <el-input v-model="addCategoryModel.cat_name"></el-input>
           </el-form-item>
-          <el-form-item label="父级分类"> </el-form-item>
+          <el-form-item label="父级分类">
+            <!-- :props="{ label: 'cat_name', value: 'cat_id', expandTrigger: 'click' }" -->
+            <el-cascader
+              v-model="parentCate"
+              :options="parentCateOptions"
+              @change="parentCateHandleChange"
+              clearable
+            >
+            </el-cascader>
+          </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addCategorydialogVisible = false">取 消</el-button>
@@ -99,6 +108,8 @@ export default {
         pagenum: 1, //这个是分页必须要用的 当前页码值
         pagesize: 5, // 这个是分页插件 每页显示的数据条数
       },
+      parentCate: [],
+      parentCateOptions: [],
       categoryList: [], // 所有分类数据
       total: 0, // 总的数据条数
       addCategorydialogVisible: false, // 添加分类的弹出框
@@ -157,8 +168,35 @@ export default {
       this.queryInfo.pagenum = val;
       this.getCategoryList();
     },
-    addCategoryBtn() {
+    async addCategoryBtn() {
+      const { data: res } = await this.$http.get('/categories', {
+        params: { type: 2 },
+      });
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      this.parentCateOptions = res.data;
+      this.updateCateList(this.parentCateOptions);
+      // this.parentCateOptions.forEach((item) => {
+      //   this.$set(item, 'label', item.cat_name);
+      //   this.$set(item, 'value', item.cat_id);
+      //   item.children.forEach((item2) => {
+      //     this.$set(item2, 'label', item2.cat_name);
+      //     this.$set(item2, 'value', item2.cat_id);
+      //   });
+      // });
       this.addCategorydialogVisible = true;
+    },
+    updateCateList(list) {
+      if (!list) {
+        return;
+      }
+      list.forEach((item) => {
+        this.$set(item, 'label', item.cat_name);
+        this.$set(item, 'value', item.cat_id);
+        this.updateCateList(item.children);
+      });
+    },
+    parentCateHandleChange(val) {
+      console.log(val);
     },
   },
 };
