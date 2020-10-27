@@ -38,8 +38,8 @@
               <template slot-scope="scope">
                 <div>
                   <el-tag
-                    :key="tag"
-                    v-for="tag in scope.row.new_attr_vals"
+                    :key="index"
+                    v-for="(tag, index) in scope.row.new_attr_vals"
                     closable
                     :disable-transitions="false"
                     @close="handleClose(tag)"
@@ -338,12 +338,36 @@ export default {
       //   this.$refs.saveTagInput.$refs.input.focus();
       // })
     },
-    handleInputConfirm(scope) {
-      if (scope.inputValue) {
-        scope.new_attr_vals.push(scope.inputValue);
+    async handleInputConfirm(scope) {
+      console.log(scope);
+      if (!scope.inputValue) {
+        scope.inputVisible = false;
+        scope.inputValue = '';
+        return null;
       }
+
+      // 到了下面这里来，证明数据没问题，可以发请求了，并且我们的添加数据操作，也必须放到请求成功以后，只有远程添加成功了本地才能添加，，时刻保持同步
+      let strAttr_val = '';
+      if (!scope.attr_vals) {
+        strAttr_val = scope.inputValue;
+      } else {
+        strAttr_val = scope.attr_vals + ' ' + scope.inputValue;
+      }
+
+      const { data: res } = await this.$http.put(
+        `categories/${scope.cat_id}/attributes/${scope.attr_id}`,
+        {
+          attr_name: scope.attr_name,
+          attr_sel: this.activeName,
+          attr_vals: strAttr_val,
+        }
+      );
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+
+      scope.new_attr_vals.push(scope.inputValue);
       scope.inputVisible = false;
       scope.inputValue = '';
+      this.$message.success('修改参数成功');
     },
   },
   computed: {
