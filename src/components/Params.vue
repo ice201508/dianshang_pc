@@ -37,27 +37,29 @@
             <el-table-column type="expand" width="50">
               <template slot-scope="scope">
                 <div>
-                  <div v-if="scope.row.attr_vals.length > 0">
-                    <el-tag
-                      :key="tag"
-                      v-for="tag in scope.row.attr_vals.split(' ')"
-                      closable
-                      :disable-transitions="false"
-                      @close="handleClose(tag)"
-                    >
-                      {{ tag }}
-                    </el-tag>
-                  </div>
+                  <el-tag
+                    :key="tag"
+                    v-for="tag in scope.row.new_attr_vals"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleClose(tag)"
+                  >
+                    {{ tag }}
+                  </el-tag>
                   <el-input
                     class="input-new-tag"
-                    v-if="inputVisible"
-                    v-model="inputValue"
+                    v-if="scope.row.inputVisible"
+                    v-model.trim="scope.row.inputValue"
                     ref="saveTagInput"
                     size="small"
                     @keyup.enter.native="handleInputConfirm(scope.row)"
                     @blur="handleInputConfirm(scope.row)"
                   />
-                  <el-button v-else class="button-new-tag" size="small" @click="showInput"
+                  <el-button
+                    v-else
+                    class="button-new-tag"
+                    size="small"
+                    @click="showInput(scope.row)"
                     >+ New Tag</el-button
                   >
                 </div>
@@ -201,8 +203,6 @@ export default {
       rules: {
         attr_name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
       },
-      inputVisible: false,
-      inputValue: '',
     };
   },
   created() {
@@ -225,6 +225,12 @@ export default {
       });
 
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      res.data.forEach((item) => {
+        let tmp = item.attr_vals ? item.attr_vals.split(' ') : [];
+        this.$set(item, 'new_attr_vals', tmp);
+        this.$set(item, 'inputVisible', false);
+        this.$set(item, 'inputValue', '');
+      });
 
       if (this.activeName === 'many') {
         this.manyParamsData = res.data;
@@ -273,7 +279,6 @@ export default {
         this.editParamDialogVisible = false;
       });
     },
-
     paramDialogClose() {
       this.$refs.ruleForm.resetFields();
     },
@@ -324,19 +329,21 @@ export default {
     handleClose(val) {
       console.log(val);
     },
-    showInput() {
-      this.inputVisible = true;
-      this.$nextTick((_) => {
+    showInput(scope) {
+      scope.inputVisible = true;
+      this.$nextTick(() => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
+      // setTimeout(()=>{
+      //   this.$refs.saveTagInput.$refs.input.focus();
+      // })
     },
-    handleInputConfirm(val) {
-      // let inputValue = this.inputValue;
-      // if (inputValue) {
-      //   this.val.attr.push(val.attr);
-      // }
-      this.inputVisible = false;
-      this.inputValue = '';
+    handleInputConfirm(scope) {
+      if (scope.inputValue) {
+        scope.new_attr_vals.push(scope.inputValue);
+      }
+      scope.inputVisible = false;
+      scope.inputValue = '';
     },
   },
   computed: {
@@ -359,5 +366,20 @@ export default {
 }
 .el-tag {
   margin: 0 10px;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>
