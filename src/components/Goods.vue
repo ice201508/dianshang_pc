@@ -36,14 +36,14 @@
         <el-table-column prop="goods_name" label="商品名称"> </el-table-column>
         <el-table-column label="商品价格(元)" width="160">
           <template slot-scope="scope">
-            <span>{{ scope.row.goods_price | moneyFilter }}</span>
+            <span>{{ scope.row.goods_price }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="goods_weight" label="商品重量" width="160"> </el-table-column>
         <el-table-column label="创建时间" width="220">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.add_time | timeFilter }}</span>
+            <span style="margin-left: 10px">{{ scope.row.add_time }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
