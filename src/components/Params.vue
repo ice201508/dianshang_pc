@@ -339,7 +339,6 @@ export default {
       // })
     },
     async handleInputConfirm(scope) {
-      console.log(scope);
       if (!scope.inputValue) {
         scope.inputVisible = false;
         scope.inputValue = '';
