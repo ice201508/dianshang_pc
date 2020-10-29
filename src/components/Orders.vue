@@ -18,23 +18,60 @@
         <el-table-column label="操作" width="250">
           <template slot-scope>
             <div>
-              <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
-              <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+              <el-button size="mini" type="primary" icon="el-icon-edit" @click="updateAddress"
+                >修改地址</el-button
+              >
+              <el-button size="mini" type="danger" icon="el-icon-delete" @click="wuliu"
+                >物流</el-button
+              >
             </div>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 省市区选择 -->
+    <el-dialog title="修改地址" :visible.sync="addressDialogVisible" width="50%">
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="省市区选择" prop="city">
+          <el-cascader :options="cityOptions" :value="ruleForm.city"> </el-cascader>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="detail">
+          <el-input v-model="ruleForm.detail"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addressDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addressDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
-
 <script>
+import cityOptions from '@/components/citydata';
+
 export default {
   name: 'Orders',
   data() {
     return {
       total: 0,
       orderList: [],
+      addressDialogVisible: false,
+      ruleForm: {
+        city: [],
+        detail: '',
+      },
+      cityOptions: cityOptions,
+      rules: {
+        city: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        detail: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+      },
     };
   },
   created() {
@@ -52,6 +89,10 @@ export default {
       this.orderList = res.data.goods;
       this.total = res.data.total;
     },
+    updateAddress() {
+      this.addressDialogVisible = true;
+    },
+    wuliu() {},
   },
 };
 </script>
