@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>随便写，后面会有优化这个组件的内容</el-breadcrumb-item>
       <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
 
     <!-- 卡片组件 -->
     <el-card>
@@ -18,23 +18,14 @@
             <!-- 这里面就是点击前面按钮展开以后的内容放的地方，可以放任何内容 -->
             <!-- 注意这里是一个一级分类，就有一行，所有是循环多个el-row， 不是循环的内部元素 -->
             <!-- 每个循环都有索引号，一般是给动态设置类，或者索引使用的，不用可以不加 -->
-            <el-row
-              class="row-1 vertical-moddle"
-              :class="['colr-red']"
-              v-for="item_1 in scope.row.children"
-              :key="item_1.id"
-            >
+            <el-row class="row-1 vertical-moddle" :class="['colr-red']" v-for="item_1 in scope.row.children" :key="item_1.id">
               <el-col :span="5">
                 <el-tag>{{ item_1.authName }}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <el-col :span="19">
                 <!-- 注意栅格系统的嵌套，这是19列的col，我们把这个19列又当做一行，写一个el-row，里面再写两个列el-col -->
-                <el-row
-                  class="row-2 vertical-moddle"
-                  v-for="item_2 in item_1.children"
-                  :key="item_2.id"
-                >
+                <el-row class="row-2 vertical-moddle" v-for="item_2 in item_1.children" :key="item_2.id">
                   <el-col :span="8">
                     <el-tag type="success">{{ item_2.authName }}</el-tag>
                     <i class="el-icon-caret-right"></i>
@@ -63,13 +54,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button
-              size="mini"
-              type="warning"
-              icon="el-icon-setting"
-              @click="fenpeiRoles(scope.row)"
-              >分配角色</el-button
-            >
+            <el-button size="mini" type="warning" icon="el-icon-setting" @click="fenpeiRoles(scope.row)">分配角色</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,6 +81,8 @@
 </template>
 
 <script>
+import BreadCom from '../plugins/bread.vue';
+
 export default {
   name: 'Roles',
   data() {
@@ -114,6 +101,9 @@ export default {
   created() {
     this.getRolesList();
     // this.getRightsList();
+  },
+  components: {
+    // BreadCom,
   },
   methods: {
     async getRolesList() {

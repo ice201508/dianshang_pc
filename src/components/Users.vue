@@ -1,11 +1,11 @@
 <template>
   <div class="user">
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>活动管理</el-breadcrumb-item>
       <el-breadcrumb-item>活动列表</el-breadcrumb-item>
       <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
     <el-card class="box-card">
       <!-- 表单搜索区域 -->
       <div class="input-box">
@@ -15,9 +15,7 @@
               <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
             </el-input>
           </el-col>
-          <el-col :span="4">
-            <el-button type="primary" @click="addUser">添加用户</el-button></el-col
-          >
+          <el-col :span="4"> <el-button type="primary" @click="addUser">添加用户</el-button></el-col>
         </el-row>
       </div>
       <!-- table数据区域 -->
@@ -35,13 +33,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              circle
-              @click="showEditDialog(scope.row.id)"
-            ></el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="showEditDialog(scope.row.id)"></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete" circle></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
               <el-button type="warning" size="mini" icon="el-icon-setting" circle></el-button>
@@ -105,6 +97,8 @@
 </template>
 
 <script>
+import BreadCom from '../plugins/bread.vue';
+
 export default {
   name: 'Users',
   data() {
@@ -155,6 +149,9 @@ export default {
   },
   created() {
     this.getUserList();
+  },
+  components: {
+    // BreadCom,
   },
   methods: {
     myselfIndex(index) {

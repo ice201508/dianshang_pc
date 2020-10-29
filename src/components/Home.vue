@@ -43,6 +43,7 @@
         </el-menu>
       </el-aside>
       <el-main>
+        <BreadCom />
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -50,6 +51,8 @@
 </template>
 
 <script>
+import BreadCom from '../plugins/bread.vue';
+
 export default {
   name: 'Home',
   data() {
@@ -69,6 +72,10 @@ export default {
   created() {
     this.getMenuList();
     this.activePath = window.sessionStorage.getItem('activePath');
+  },
+
+  components: {
+    BreadCom,
   },
   methods: {
     loginOut() {

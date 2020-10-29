@@ -36,16 +36,25 @@ const routes = [
       },
       {
         path: '/users',
+        meta: {
+          name: '用户列表',
+        },
         // component: Users,
         component: () => import(/* webpackChunkName: "group-foo4" */ '../components/Users.vue'),
       },
       {
         path: '/rights',
+        meta: {
+          name: '角色列表',
+        },
         // component: Rights,
         component: () => import(/* webpackChunkName: "group-foo4" */ '../components/Rights.vue'),
       },
       {
         path: '/roles',
+        meta: {
+          name: '权限列表',
+        },
         // component: Roles,
         component: () => import(/* webpackChunkName: "grou132p-foo3" */ '../components/Roles.vue'),
       },
