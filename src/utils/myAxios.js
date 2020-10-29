@@ -1,4 +1,5 @@
 import axios from 'axios';
+import NProgress from 'nprogress';
 
 // axios.defaults.baseURL = 'http://m.leijiuling.com/api/private/v1/';
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
@@ -7,6 +8,7 @@ const whiteList = ['/login', '/registry', '/code'];
 // 添加请求拦截器
 axios.interceptors.request.use(
   function(config) {
+    NProgress.start();
     // 在发送请求之前做些什么
     // if (config.url !== '/login') {
     if (!whiteList.includes(config.url)) {
@@ -24,6 +26,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function(response) {
     // 对响应数据做点什么
+    NProgress.done();
     return response;
   },
   function(error) {

@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue';
 import router from './router';
 import axios from './utils/myAxios';
+import 'nprogress/nprogress.css';
 
 import './assets/css/global.css';
 import './assets/fonts/iconfont.css';
