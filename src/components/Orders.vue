@@ -51,10 +51,25 @@
         <el-button type="primary" @click="addressDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 物流选择 -->
+    <el-dialog title="修改地址" :visible.sync="wuliuDialogVisible" width="50%">
+      <el-timeline>
+        <el-timeline-item
+          v-for="(item, index) in wuliuList"
+          :key="index"
+          :timestamp="item.time"
+          placement="bottom"
+        >
+          {{ item.context }}
+        </el-timeline-item>
+      </el-timeline>
+    </el-dialog>
   </div>
 </template>
 <script>
 import cityOptions from '@/components/citydata';
+import axios from 'axios';
 
 export default {
   name: 'Orders',
@@ -63,11 +78,13 @@ export default {
       total: 0,
       orderList: [],
       addressDialogVisible: false,
+      wuliuDialogVisible: false,
       ruleForm: {
         city: [],
         detail: '',
       },
       cityOptions: cityOptions,
+      wuliuList: [],
       rules: {
         city: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
         detail: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
@@ -92,7 +109,13 @@ export default {
     updateAddress() {
       this.addressDialogVisible = true;
     },
-    wuliu() {},
+    async wuliu() {
+      const { data: res } = await axios.get(
+        'https://www.liulongbin.top:8888/api/private/v1/kuaidi/804909574412544580'
+      );
+      this.wuliuList = res.data;
+      this.wuliuDialogVisible = true;
+    },
   },
 };
 </script>
