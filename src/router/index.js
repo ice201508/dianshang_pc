@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from '../components/Login.vue';
-import Home from '../components/Home.vue';
+// import Home from '../components/Home.vue';
 // import Welcome from '../components/Welcome.vue';
 // import Users from '../components/Users.vue';
 // import Rights from '../components/Rights.vue';
@@ -82,6 +82,11 @@ const routes = [
         path: '/orders',
         // component: Orders,
         component: () => import(/* webpackChunkName: "Orders" */ '../components/Orders.vue'),
+      },
+      {
+        path: '/vuex',
+        // component: vuex,
+        component: () => import(/* webpackChunkName: "vuex" */ '../components/Vuex.vue'),
       },
     ],
   },
